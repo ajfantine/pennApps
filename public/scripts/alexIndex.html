@@ -10,8 +10,8 @@
 
           <tr>
               <th id="itemName">Item Name</th>
-              <th id="time">Time of Day</th>
-              <th>Day of the Week</th>
+              <input id="inputElt" type="text"/>
+              <button onclick="sendMessage()">send</button>
           </tr>
        </table>
 
@@ -37,11 +37,19 @@
 			var db = firebase.database();
 
 			var ref = db.ref('Friday/afternoon snack');
-			ref.on('child_added', gotData, errData);
 
+			ref.on('value', function(snapshot){
+        console.log(snapshot.val())
+        var numCode = snapshot.val()
+
+        //call a second ref for the rest of the program
+        ref.on('child_added', gotData, errData)
+      }, errData);
+
+      //var count = 0
       var array = []
 			function gotData(data){
-				//console.log(data.val());
+				console.log(data.val());
         var itemObj = data.val()
         var itemCont = document.getElementById('table')
 
@@ -50,14 +58,20 @@
         //var newTime = document.createElement('tr')
 
         var itemName = itemObj.item
-        var itemTime = "afternoon snack"
+        var itemRank = itemObj.rating
+        if (itemRank == null){
+          itemRank = ''
+        }
+        console.log(itemRank)
+        var itemTime = "Afternoon Snack"
         var itemDate = "Friday"
         //var itemArr = [itemName, itemTime, itemDate]
         //array.push(itemArr)
-        newItem.append(itemName)
+        newItem.append(itemName+ ' ... ' +  itemRank)
         //newItem.append(itemName)
         itemCont.append(newItem)
-        itemCont.append(itemTime)
+        //count = count + 1
+        //itemCont.append(itemTime)
         //timeCont.append(newTime)
 			}
       //console.log(array)
@@ -66,6 +80,24 @@
 				console.logg("error");
 				console.log(err);
 			}
+
+      //console.log(count)
+      function sendMessage(){
+      	var inputElt = document.getElementById('inputElt')
+        	var input = inputElt.value
+          console.log(input)
+          inpArr = input.split(':')
+          var item = inpArr[0]
+          console.log(item)
+          var rating = inpArr[1]
+          console.log(rating)
+          var address = '/' + item
+        	db.ref('Friday/afternoon snack/7').update({
+          	rating: rating
+          })
+      }
+
+      inputElt.value = ""
       /*
 			db.ref('/').push({
 				Item: "pizza",
@@ -102,7 +134,7 @@
            // Method 2
 
            table = document.getElementById("table");
-           console.log("Entering table builder")
+          //console.log("Entering table builder")
            for(var i = 0; i < array.length; i++)
            {
              console.log("hi")
