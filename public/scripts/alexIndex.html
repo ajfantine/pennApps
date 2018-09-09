@@ -38,13 +38,7 @@
 
 			var ref = db.ref('Friday/afternoon snack');
 
-			ref.on('value', function(snapshot){
-        console.log(snapshot.val())
-        var numCode = snapshot.val()
-
-        //call a second ref for the rest of the program
-        ref.on('child_added', gotData, errData)
-      }, errData);
+      ref.on('child_added', gotData, errData)
 
       //var count = 0
       var array = []
@@ -66,7 +60,7 @@
         var itemTime = "Afternoon Snack"
         var itemDate = "Friday"
         //var itemArr = [itemName, itemTime, itemDate]
-        //array.push(itemArr)
+        array.push(itemName)
         newItem.append(itemName+ ' ... ' +  itemRank)
         //newItem.append(itemName)
         itemCont.append(newItem)
@@ -81,6 +75,13 @@
 				console.log(err);
 			}
 
+      var dict = {}
+        for (var i = 0; i < array.length; i++){
+          console.log(i)
+          dict.array[i] = i
+        }
+
+      console.log(dict)
       //console.log(count)
       function sendMessage(){
       	var inputElt = document.getElementById('inputElt')
@@ -96,6 +97,8 @@
           	rating: rating
           })
       }
+
+      console.log(array)
 
       inputElt.value = ""
       /*
