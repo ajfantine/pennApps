@@ -75,13 +75,10 @@
       var curr_day = 'Monday'
       var curr_tod = 'breakfast'
 
-      var ref = db.ref(refName);
-
       function dropdownToDSelect(){
         curr_tod = document.getElementById("tod").value;
-        curr_tod.lower()
+        curr_tod.toLowerCase()
         console.log(curr_tod)
-
       }
 
       function dropdownDaySelect(){
@@ -90,6 +87,12 @@
       }
 
       var refName = curr_day + '/' + curr_tod
+      console.log(refName)
+
+      var ref = db.ref(refName);
+
+      ref.on('child_added', gotData, errData)
+
 
       var array = []
       var itemArr = []
@@ -99,10 +102,10 @@
         var newItem = document.createElement('tr')
 
         var itemName = itemObj.item
-        var itemRank = itemObj.rating
+        var itemRating = itemObj.rating
 
-        if (itemRank == null){
-          itemRank = ''
+        if (itemRating == null){
+          itemRating = ''
         }
 
         multArr = [itemName, itemRating]
@@ -110,13 +113,13 @@
         itemArr.push(multArr)
 
         newItem.append(itemName+ " ");
-        for(var i = 0; i<itemRank;i++){
+        for(var i = 0; i<itemRating;i++){
           var star = document.createElement('span');
           star.className = "fa fa-star checked";
           newItem.append(star)
         }
 
-        for(var i = 0; i<10-itemRank;i++){
+        for(var i = 0; i<10-itemRating;i++){
           var star = document.createElement('span');
           star.className = "fa fa-star";
           newItem.append(star)
